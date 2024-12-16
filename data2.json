@@ -1,0 +1,34 @@
+[
+    {
+        "vendor": "GE",
+        "power": "1.5T",
+        "version": "DV25.0",
+        "os": "RedHAT",
+        "vnc_supported": true,
+        "comments": "Comment for GE 1"
+    },
+    {
+        "vendor": "GE",
+        "power": "1.5T",
+        "version": "DV26.0",
+        "os": "RedHAT",
+        "vnc_supported": true,
+        "comments": "Comment for GE 2"
+    },
+    {
+        "vendor": "Siemens",
+        "power": "1.5T",
+        "version": "Prisma",
+        "os": "Windows7",
+        "vnc_supported": true,
+        "comments": "Comment for Siemens 1"
+    },
+    {
+        "vendor": "Philips",
+        "power": "3.0T",
+        "version": "Skyra",
+        "os": "RedHAT",
+        "vnc_supported": true,
+        "comments": "Comment for Siemens 2"
+    }
+]

@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment directories
+env/
+venv/
+ENV/
+*.env
+
+# PyQt5 build artifacts
+*.qrc
+*.pyc
+*.pyo
+build/
+dist/
+
+# Logs and temporary files
+*.log
+*.bak
+*.swp
+.DS_Store
+
+# OS-specific files
+Thumbs.db
+desktop.ini
+
+# IDE and editor-specific files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
