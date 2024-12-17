@@ -107,7 +107,7 @@ This project follows the Model-View-Controller (MVC) design pattern and leverage
 4. Controller (controller.py):
     - Processes user actions (e.g., Load, Save, Add, Delete) and updates the Model and View accordingly.
 
-## ** Example File Support **
+## **Example File Support**
 
     - JSON File: Standard JSON format for readability and text-based editing.
     - Binary File: Optimized storage using pickle for faster read/write operations.
