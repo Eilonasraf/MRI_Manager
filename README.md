@@ -1,4 +1,4 @@
-## ** MRI Device Data Management Application **
+## **MRI Device Data Management Application**
 
 A Python-based application for managing MRI device data, developed as part of the staff admission process. The application allows users to:
 - Load MRI device data from a JSON or Binary file.
