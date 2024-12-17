@@ -4,8 +4,8 @@ from model import MRIDevice
 class MRIDeviceController:
     """Connects the View and Model (Controller in MVC)."""
     def __init__(self, model, view):
-        self.model = model
-        self.view = view
+        self.model = model # MRIDeviceManager
+        self.view = view  # MRIDeviceView
 
         # Connect View buttons to their respective functions
         self.view.load_button.clicked.connect(self.load_data)
@@ -14,22 +14,29 @@ class MRIDeviceController:
         self.view.delete_button.clicked.connect(self.delete_device)
 
     def load_data(self):
-        """Loads data from a JSON file into the model and updates the view."""
-        filepath, _ = QFileDialog.getOpenFileName(self.view, "Load JSON File", "", "JSON Files (*.json)")
+        """Loads data from a file into the model and updates the view."""
+        filepath, _ = QFileDialog.getOpenFileName(self.view, "Load File", "", "All Files (*.*)")
         if filepath:
             try:
-                self.model.from_json(filepath) # Load the file into the model
-                self.view.populate_table(self.model.devices) # Update the view with the loaded data
+                self.model.load_from_file(filepath)  # Dynamically loads using the file handler
+                self.view.populate_table(self.model.devices)  # Update the view with the loaded data
             except Exception as e:
                 QMessageBox.critical(self.view, "Error", f"Failed to load file: {str(e)}")
 
     def save_data(self):
-        """Saves data from the model into a JSON file."""
-        filepath, _ = QFileDialog.getSaveFileName(self.view, "Save JSON File", "", "JSON Files (*.json)")
+        """Saves data from the model into a file."""
+        filepath, _ = QFileDialog.getSaveFileName(
+            self.view, "Save File", "data.json", "JSON Files (*.json);;Binary Files (*.bin)"
+        )
         if filepath:
             try:
+                # Ensure the file has a proper extension
+                if not (filepath.endswith(".json") or filepath.endswith(".bin")):
+                    filepath += ".json"  # Default to JSON if no extension is given
+
                 self.model.devices = self.get_devices_from_table()
-                self.model.to_json(filepath)
+                self.model.save_to_file(filepath)  # Dynamically save using file handler
+                QMessageBox.information(self.view, "Success", "File saved successfully!")
             except Exception as e:
                 QMessageBox.critical(self.view, "Error", f"Failed to save file: {str(e)}")
 

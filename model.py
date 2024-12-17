@@ -33,11 +33,11 @@ class MRIDevice:
             data["comments"]
         )
 
-
 class MRIDeviceManager:
     """Manages a list of MRI devices."""
-    def __init__(self):
+    def __init__(self, file_handler):
         self.devices = []  # Internal storage for devices
+        self.file_handler = file_handler  # File handler (JSON/Binary)
 
     def add_device(self, device):
         """Adds a new device to the list."""
@@ -53,13 +53,18 @@ class MRIDeviceManager:
         if 0 <= index < len(self.devices):
             self.devices[index] = updated_device
 
-    def to_json(self, filepath):
-        """Saves the devices to a JSON file."""
-        with open(filepath, "w") as file:
-            json.dump([device.to_dict() for device in self.devices], file, indent=4)
+    def load_from_file(self, filepath):
+        """Loads devices using the specified file handler."""
+        data = self.file_handler.load(filepath)  # Use dynamic file handler
 
-    def from_json(self, filepath):
-        """Loads devices from a JSON file."""
-        with open(filepath, "r") as file:
-            data = json.load(file)
+        # Check if data is already a list of MRIDevice objects (Binary)
+        if isinstance(data, list) and all(isinstance(item, MRIDevice) for item in data):
+            self.devices = data  # Directly assign for Binary files
+        else:
+            # Convert dictionaries to MRIDevice objects (JSON)
             self.devices = [MRIDevice.from_dict(item) for item in data]
+
+    def save_to_file(self, filepath):
+        """Saves devices using the specified file handler."""
+        data = [device.to_dict() for device in self.devices]
+        self.file_handler.save(filepath, data)
