@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 from model import MRIDevice
+from file_handlers import JSONFileHandler, BinaryFileHandler  # Import file handlers
 
 class MRIDeviceController:
     """Connects the View and Model (Controller in MVC)."""
@@ -25,18 +26,34 @@ class MRIDeviceController:
 
     def save_data(self):
         """Saves data from the model into a file."""
-        filepath, _ = QFileDialog.getSaveFileName(
-            self.view, "Save File", "data.json", "JSON Files (*.json);;Binary Files (*.bin)"
+        # Ask the user to choose JSON or Binary
+        file_type, ok = QFileDialog.getSaveFileName(
+            self.view,
+            "Save File As",
+            "data", 
+            "JSON Files (*.json);;Binary Files (*.bin)"
         )
-        if filepath:
-            try:
-                # Ensure the file has a proper extension
-                if not (filepath.endswith(".json") or filepath.endswith(".bin")):
-                    filepath += ".json"  # Default to JSON if no extension is given
 
+        if file_type and ok:
+            try:
+                # Automatically set the handler based on file extension
+                if file_type.endswith(".json"):
+                    handler = JSONFileHandler()
+                    filepath = file_type
+                elif file_type.endswith(".bin"):
+                    handler = BinaryFileHandler()
+                    filepath = file_type
+                else:
+                    QMessageBox.warning(self.view, "Invalid", "Unsupported file type!")
+                    return
+
+                # Assign the new handler temporarily
+                self.model.file_handler = handler
+                
+                # Extract devices from the table and save
                 self.model.devices = self.get_devices_from_table()
-                self.model.save_to_file(filepath)  # Dynamically save using file handler
-                QMessageBox.information(self.view, "Success", "File saved successfully!")
+                self.model.save_to_file(filepath)
+                QMessageBox.information(self.view, "Success", f"File saved successfully as {filepath}!")
             except Exception as e:
                 QMessageBox.critical(self.view, "Error", f"Failed to save file: {str(e)}")
 

@@ -1,4 +1,5 @@
 import json
+from file_handlers import JSONFileHandler, BinaryFileHandler  # Import file handlers
 
 class MRIDevice:
     """Represents a single MRI device (Model in MVC)."""
@@ -55,16 +56,35 @@ class MRIDeviceManager:
 
     def load_from_file(self, filepath):
         """Loads devices using the specified file handler."""
-        data = self.file_handler.load(filepath)  # Use dynamic file handler
+        try:
+            data = self.file_handler.load(filepath)
 
-        # Check if data is already a list of MRIDevice objects (Binary)
-        if isinstance(data, list) and all(isinstance(item, MRIDevice) for item in data):
-            self.devices = data  # Directly assign for Binary files
-        else:
-            # Convert dictionaries to MRIDevice objects (JSON)
-            self.devices = [MRIDevice.from_dict(item) for item in data]
+            if isinstance(data, list):
+                # Check if data is already MRIDevice objects (Binary) or dictionaries (JSON)
+                if all(isinstance(item, MRIDevice) for item in data):
+                    self.devices = data  # Already MRIDevice objects (Binary file)
+                else:
+                    # Convert JSON dictionaries to MRIDevice objects
+                    self.devices = [MRIDevice.from_dict(item) for item in data]
+            else:
+                raise ValueError("Invalid file format.")
+        except Exception as e:
+            raise ValueError(f"Failed to load data: {e}")
 
     def save_to_file(self, filepath):
         """Saves devices using the specified file handler."""
-        data = [device.to_dict() for device in self.devices]
-        self.file_handler.save(filepath, data)
+        if isinstance(self.file_handler, BinaryFileHandler):
+            # Save the list of MRIDevice objects directly for Binary files
+            self.file_handler.save(filepath, self.devices)
+            
+        elif isinstance(self.file_handler, JSONFileHandler):
+            # Convert MRIDevice objects to dictionaries for JSON files
+            json_data = [device.to_dict() for device in self.devices]
+            self.file_handler.save(filepath, json_data)
+            
+        else:
+            raise ValueError("Unsupported file handler.")
+
+
+
+

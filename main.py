@@ -17,7 +17,7 @@ if __name__ == "__main__":
     elif file_type == "binary":
         file_handler = BinaryFileHandler()
     else:
-        print("Unsupported file type. Exiting...")
+        print("Invalid file type! Please choose 'json' or 'binary'. Exiting...")
         sys.exit(1)
 
     # Pass the file_handler to MRIDeviceManager
