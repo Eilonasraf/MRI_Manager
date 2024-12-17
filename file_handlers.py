@@ -37,15 +37,8 @@ class BinaryFileHandler(FileHandler):
         """Loads data from a Binary file."""
         with open(filepath, "rb") as file:
             return pickle.load(file) 
-            # Reads the binary stream from the file.
-            # Deserializes it back into the original Python object (e.g., a list of MRIDevice objects).
-            # This is why the list of MRIDevice objects is returned directly.
-
-
+            
     def save(self, filepath, data):
         """Saves data to a Binary file."""
         with open(filepath, "wb") as file:
             pickle.dump(data, file)
-            # data: This is the list of MRIDevice objects (self.devices).
-            # pickle.dump serializes the entire list of objects into a binary stream.
-            # It writes the binary stream to the file.
